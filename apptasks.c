@@ -7,10 +7,10 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
-#include "tasks.h"
+//#include "tasks.h"
 #include "Drivers/led.h"
 
-
+/*
 void vLEDFlashTask(void *pvParms)
 {
 	vLEDInit();
@@ -23,4 +23,4 @@ void vLEDFlashTask(void *pvParms)
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
 	}
 }
-
+*/

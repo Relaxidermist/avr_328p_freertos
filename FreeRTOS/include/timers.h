@@ -77,7 +77,7 @@
 
 /*lint -e537 This headers are only multiply included if the application code
 happens to also be including task.h. */
-#include "task.h"
+#include "../../FreeRTOS/include/task.h"
 /*lint +e537 */
 
 #ifdef __cplusplus

@@ -92,7 +92,7 @@ projects should not use them. */
 
 #ifdef GCC_MEGA_AVR
  	#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328__)
-        #include "../portable/GCC/ATMega328/portmacro.h"
+        #include "../../FreeRTOS/portable/GCC/ATMega328/portmacro.h"
     #else
         #include "../portable/GCC/ATMega323/portmacro.h"   
     #endif

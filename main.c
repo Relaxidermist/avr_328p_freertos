@@ -5,9 +5,9 @@
  *      Author: jcobb
  */
 #include <avr/io.h>
+//#include "apptasks.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "apptasks.h"
 
 #define mainLED_TASK_PRIORITY			(tskIDLE_PRIORITY)
 #define mainLED_TASK_PRIORITY 			(tskIDLE_PRIORITY+1)
@@ -20,7 +20,7 @@ void vLEDFlashTask(void *pvParms)
 {
 	vLEDInit();
 	portTickType xLastWakeTime;
-	const portTickType xFrequency = 1000;
+	const portTickType xFrequency = 100;
 	xLastWakeTime = xTaskGetTickCount();
 
 	for(;;) {

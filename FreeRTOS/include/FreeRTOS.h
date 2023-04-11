@@ -98,10 +98,10 @@ extern "C" {
 #include "../../FreeRTOSConfig.h"
 
 /* Basic FreeRTOS definitions. */
-#include "projdefs.h"
+#include "../../FreeRTOS/include/projdefs.h"
 
 /* Definitions specific to the port being used. */
-#include "portable.h"
+#include "../../FreeRTOS/include/portable.h"
 
 /*
  * Check all the required application specific macros have been defined.
