@@ -16,7 +16,7 @@ void vLEDFlashTask(void *pvParms)
 {
 	vLEDInit();
 	portTickType xLastWakeTime;
-	const portTickType xFrequency = 1000;
+	const portTickType xFrequency = 500;
 	xLastWakeTime = xTaskGetTickCount();
 
 	for(;;) {
@@ -25,8 +25,18 @@ void vLEDFlashTask(void *pvParms)
 	}
 }
 
-void vUARTIfaceTask(void *pvParms)
+void vUSARTIfaceTask(void *pvParms)
 {
-	;
+	vUSARTInit();
+	portTickType xLastWakeTime;
+	const portTickType xFrequency = 10000;
+	xLastWakeTime = xTaskGetTickCount();
+
+	vUSARTSetMessage("Hello, world!");
+
+	for(;;) {
+		vUSARTPrint();
+		vTaskDelayUntil(&xLastWakeTime, xFrequency);
+	}
 }
 

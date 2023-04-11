@@ -3,6 +3,9 @@
  *
  *  Created on: 11 Apr 2023
  *      Author: ingram
+ *
+ *      usart code stolen from here:
+ *      https://www.coderoasis.com/implementing-uart-on-the-atmega328p/
  */
 
 #include <avr/io.h>
@@ -29,12 +32,12 @@ static char* message;
 // can only be changed via 'public method' usart_set_message()
 
 // Sets the private member data message
-void usart_set_message(char* msg) {
+void vUSARTSetMessage(char* msg) {
   message = msg;
 }
 
 // initializes the UART for use
-void usart_init() {
+void vUSARTInit() {
   // reset USDR0 to empty, emptying RX/TX buffer
   // set baud rate
   UBRR0H = BAUD_PRESCALAR >> 8;
@@ -44,7 +47,7 @@ void usart_init() {
 }
 
 // carriage return line feed
-void usart_crlf(){
+void vUSARTCrlf(){
   while ((UCSR0A & (1<<UDRE))== 0);
   UDR0 = '\r';
   while ((UCSR0A & (1<<UDRE))== 0);
@@ -52,7 +55,7 @@ void usart_crlf(){
 }
 
 // print the message to the uart
-void usart_print() {
+void vUSARTPrint() {
   // clear transmit buffer
   UDR0 = 0x00;
   // enable transmit mode
@@ -61,7 +64,7 @@ void usart_print() {
     while ((UCSR0A & (1<<UDRE))== 0);
     UDR0 = (char) message[idx];
   }
-  usart_crlf();
+  vUSARTCrlf();
   // disable transmit mode
   UCSR0B = (0 << TXEN0);
 }

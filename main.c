@@ -9,8 +9,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#define mainLED_TASK_PRIORITY			(tskIDLE_PRIORITY)
+//#define mainLED_TASK_PRIORITY			(tskIDLE_PRIORITY)
 #define mainLED_TASK_PRIORITY 			(tskIDLE_PRIORITY+1)
+#define mainUSART_TASK_PRIORITY			(tskIDLE_PRIORITY+1)
 // #define mainNEXT_TASK_2				(tskIDLE_PRIORITY+2)
 // #define mainNEXT_TASK_3				(tskIDLE_PRIORITY+3)
 
@@ -21,6 +22,8 @@ void vApplicationIdleHook( void );
 portSHORT main(void)
 {
 	xTaskCreate(vLEDFlashTask, (int8_t*) "LED", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL);
+	xTaskCreate(vUSARTIfaceTask, (int8_t*) "LED", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL);
+
 
 	vTaskStartScheduler();
 
