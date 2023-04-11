@@ -9,8 +9,9 @@
 #include "task.h"
 //#include "tasks.h"
 #include "Drivers/led.h"
+#include "Drivers/usart.h"
 
-/*
+
 void vLEDFlashTask(void *pvParms)
 {
 	vLEDInit();
@@ -23,4 +24,9 @@ void vLEDFlashTask(void *pvParms)
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
 	}
 }
-*/
+
+void vUARTIfaceTask(void *pvParms)
+{
+	;
+}
+

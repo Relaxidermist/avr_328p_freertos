@@ -9,5 +9,6 @@
 #define TASKS_H_
 
 void vLEDFlashTask(void *pvParms);
+void vUARTIfaceTask(void *pvParms);
 
 #endif /* TASKS_H_ */
