@@ -23,7 +23,7 @@ portSHORT main(void)
 {
 	xTaskCreate(vLEDFlashTask, (int8_t*) "LED", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL);
 	xTaskCreate(vUSARTIfaceTask, (int8_t*) "LED", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL);
-
+	xTaskCreate(vSR04Task, (int8_t*) "SR04", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL);
 
 	vTaskStartScheduler();
 

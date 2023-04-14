@@ -10,5 +10,6 @@
 
 void vLEDFlashTask(void *pvParms);
 void vUSARTIfaceTask(void *pvParms);
+void vSR04Task(void *pvParms);
 
 #endif /* TASKS_H_ */

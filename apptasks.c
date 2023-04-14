@@ -40,3 +40,10 @@ void vUSARTIfaceTask(void *pvParms)
 	}
 }
 
+void vSR04Task(void *pvParms)
+{
+	for(;;) {
+			;
+	}
+}
+
