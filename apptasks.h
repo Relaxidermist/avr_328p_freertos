@@ -11,8 +11,8 @@
 #include "semphr.h"
 
 void vLEDFlashTask(void *pvParms);
-void vUSARTIfaceTask(void *pvParms);
-void vSR04Task(void *pvParms);
+void vIMUTask(void *pvParms);
+void vUltraSonicTask(void *pvParms);
 
 SemaphoreHandle_t xUSARTGetMutex();
 
