@@ -38,9 +38,8 @@ void vLEDFlashTask(void *pvParms)
 	}
 }
 
-void vUSARTIfaceTask(void *pvParms)
+void vIMUTask(void *pvParms)
 {
-	vUSARTInit();
 	portTickType xLastWakeTime;
 	const portTickType xFrequency = 500;
 	xLastWakeTime = xTaskGetTickCount();
@@ -51,7 +50,7 @@ void vUSARTIfaceTask(void *pvParms)
 
 		if(xSemaphoreTake(xSemaphore, 0) == pdTRUE)
 		{
-			vUSARTSetMessage("UART!");
+			vUSARTSetMessage("IMU!");
 			vUSARTPrint();
 			xSemaphoreGive(xSemaphore);
 		}
@@ -60,18 +59,22 @@ void vUSARTIfaceTask(void *pvParms)
 	}
 }
 
-void vSR04Task(void *pvParms)
+void vUltraSonicTask(void *pvParms)
 {
 	portTickType xLastWakeTime;
 	const portTickType xFrequency = 200;
 	xLastWakeTime = xTaskGetTickCount();
+
+	TaskHandle_t xTaskHandle = xTaskGetCurrentTaskHandle();
+
+	char * pcTaskName = pcTaskGetTaskName(xTaskHandle);
 
 	SemaphoreHandle_t xSemaphore = xUSARTGetMutex();
 
 	for(;;) {
 		if(xSemaphoreTake(xSemaphore, 0) == pdTRUE)
 		{
-			vUSARTSetMessage("SR04!");
+			vUSARTSetMessage(pcTaskName);
 			vUSARTPrint();
 			xSemaphoreGive(xSemaphore);
 		}
