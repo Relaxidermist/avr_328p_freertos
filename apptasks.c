@@ -42,8 +42,13 @@ void vUSARTIfaceTask(void *pvParms)
 
 void vSR04Task(void *pvParms)
 {
+	portTickType xLastWakeTime;
+
+	const portTickType xFrequency = 1000;
+	xLastWakeTime = xTaskGetTickCount();
+
 	for(;;) {
-			;
+		vTaskDelayUntil(&xLastWakeTime, xFrequency);
 	}
 }
 
