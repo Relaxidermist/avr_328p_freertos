@@ -7,8 +7,11 @@
 #include <avr/io.h>
 #include "FreeRTOS.h"
 
-#include "apptasks.h"
+#include <apptools.h>
+
 #include "task.h"
+#include "usart.h"
+#include "imu.h"
 
 //#define mainLED_TASK_PRIORITY			(tskIDLE_PRIORITY)
 #define mainLED_TASK_PRIORITY 			(tskIDLE_PRIORITY+2)
