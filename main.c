@@ -5,8 +5,9 @@
  *      Author: jcobb
  */
 #include <avr/io.h>
-#include "apptasks.h"
 #include "FreeRTOS.h"
+
+#include "apptasks.h"
 #include "task.h"
 
 //#define mainLED_TASK_PRIORITY			(tskIDLE_PRIORITY)

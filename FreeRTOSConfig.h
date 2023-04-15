@@ -113,5 +113,9 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
 
+//
+#define configSUPPORT_DYNAMIC_ALLOCATION	1
+#define configUSE_MUTEXES					1
+
 
 #endif /* FREERTOS_CONFIG_H */
