@@ -8,16 +8,22 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "usart.h"
+#include "i2c.h"
+#include "imu.h"
 
 #include <apptools.h>
+
+
 
 void vIMUTask(void *pvParms)
 {
 	portTickType xLastWakeTime;
-	const portTickType xFrequency = 500;
+	const portTickType xFrequency = 1000;
 	xLastWakeTime = xTaskGetTickCount();
 
 	SemaphoreHandle_t xSemaphore = xUSARTGetMutex();
+
+	vIMUInit();
 
 	for(;;) {
 
@@ -28,8 +34,30 @@ void vIMUTask(void *pvParms)
 			xSemaphoreGive(xSemaphore);
 		}
 
+		vIMURead();
+
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
 	}
+}
+
+
+/*
+ * Initialise the I2C and IMU here
+ */
+void vIMUInit()
+{
+	I2C_init();
+}
+
+
+/*
+ * TODO Read IMU Data into struct
+ */
+void vIMURead()
+{
+	I2C_start();
+	I2C_write(MPU_9250_ADDRESS_AD0_0 << 1);
+	I2C_stop();
 }
 
 
