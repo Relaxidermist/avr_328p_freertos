@@ -13,7 +13,7 @@ void I2C_init() {
 	//TWSR = 0; // prescaler = 1
 	TWSR &= 0;
 	TWSR |= (1 << TWPS1);
-	TWBR = 1; // load into bitrate reg
+	TWBR = 5; // load into bitrate reg
 }
 
 char I2C_start() {
