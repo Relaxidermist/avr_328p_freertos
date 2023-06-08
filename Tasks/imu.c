@@ -14,6 +14,27 @@
 #include <apptools.h>
 
 
+uint8_t imu_registers[] = {
+		MPU_9250_ACCEL_XOUT_H,
+		MPU_9250_ACCEL_XOUT_L,
+		MPU_9250_ACCEL_YOUT_H,
+		MPU_9250_ACCEL_YOUT_L,
+		MPU_9250_ACCEL_ZOUT_H,
+		MPU_9250_ACCEL_ZOUT_L,
+		MPU_9250_TEMP_OUT_H,
+		MPU_9250_TEMP_OUT_L,
+		MPU_9250_GYRO_XOUT_H,
+		MPU_9250_GYRO_XOUT_L,
+		MPU_9250_GYRO_YOUT_H,
+		MPU_9250_GYRO_YOUT_L,
+		MPU_9250_GYRO_ZOUT_H,
+		MPU_9250_GYRO_ZOUT_L
+};
+
+uint8_t imu_data[sizeof(imu_registers)];
+
+SemaphoreHandle_t xSemaphore = NULL;
+
 
 
 void vIMUTask(void *pvParms)
@@ -22,7 +43,7 @@ void vIMUTask(void *pvParms)
 	const portTickType xFrequency = 500;
 	xLastWakeTime = xTaskGetTickCount();
 
-	SemaphoreHandle_t xSemaphore = xUSARTGetMutex();
+	xSemaphore = xUSARTGetMutex();
 
 	vIMUInit();
 
@@ -30,9 +51,11 @@ void vIMUTask(void *pvParms)
 
 		if(xSemaphoreTake(xSemaphore, 0) == pdTRUE)
 		{
-			vUSARTSetMessage("IMU!");
-			vUSARTPrint();
+			memset(imu_data, 0, sizeof(imu_data));
+
+			vUSARTSetMessage(imu_data);
 			vIMURead();
+			vUSARTPrint();
 			xSemaphoreGive(xSemaphore);
 		}
 
@@ -52,26 +75,19 @@ void vIMUInit()
 
 
 /*
- * TODO Read IMU Data into struct
+ * TODO join high/low bytes. remove hack for sending null char
  */
 void vIMURead()
 {
-	vIMURegRead(MPU_9250_ACCEL_XOUT_H);
-	vIMURegRead(MPU_9250_ACCEL_XOUT_L);
-	vIMURegRead(MPU_9250_ACCEL_YOUT_H);
-	vIMURegRead(MPU_9250_ACCEL_YOUT_L);
-	vIMURegRead(MPU_9250_ACCEL_ZOUT_H);
-	vIMURegRead(MPU_9250_ACCEL_ZOUT_L);
-
-	vIMURegRead(MPU_9250_TEMP_OUT_H);
-	vIMURegRead(MPU_9250_TEMP_OUT_L);
-
-	vIMURegRead(MPU_9250_GYRO_XOUT_H);
-	vIMURegRead(MPU_9250_GYRO_XOUT_L);
-	vIMURegRead(MPU_9250_GYRO_YOUT_H);
-	vIMURegRead(MPU_9250_GYRO_YOUT_L);
-	vIMURegRead(MPU_9250_GYRO_ZOUT_H);
-	vIMURegRead(MPU_9250_GYRO_ZOUT_L);
+	for(uint8_t i = 0; i < sizeof(imu_registers) - 1; i++)
+	{
+		imu_data[i] = vIMURegRead(imu_registers[i]);
+		if(imu_data[i] == 0)
+		{
+			imu_data[i] = 1;
+		}
+	}
+	imu_data[sizeof(imu_data) - 1] = 0;
 }
 
 /*

@@ -29,8 +29,8 @@ portSHORT main(void)
 	vUSARTInit();
 
 	xTaskCreate(vLEDFlashTask, (int8_t*) "LED", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL);
-	xTaskCreate(vUltraSonicTask, (int8_t*) "SR04_1", configMINIMAL_STACK_SIZE, NULL, mainULTRASONIC_TASK_PRIORITY, NULL);
-	xTaskCreate(vUltraSonicTask, (int8_t*) "SR04_2", configMINIMAL_STACK_SIZE, NULL, mainULTRASONIC_TASK_PRIORITY, NULL);
+	//xTaskCreate(vUltraSonicTask, (int8_t*) "SR04_1", configMINIMAL_STACK_SIZE, NULL, mainULTRASONIC_TASK_PRIORITY, NULL);
+	//xTaskCreate(vUltraSonicTask, (int8_t*) "SR04_2", configMINIMAL_STACK_SIZE, NULL, mainULTRASONIC_TASK_PRIORITY, NULL);
 	xTaskCreate(vIMUTask, (int8_t*) "USART", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL);
 
 	vTaskStartScheduler();
