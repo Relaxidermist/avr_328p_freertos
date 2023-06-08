@@ -15,6 +15,7 @@
 
 
 
+
 void vIMUTask(void *pvParms)
 {
 	portTickType xLastWakeTime;
@@ -46,9 +47,6 @@ void vIMUTask(void *pvParms)
  */
 void vIMUInit()
 {
-	char address_payload_write;
-	address_payload_write = ((MPU_9250_ADDRESS_AD0_0 << 1));
-
 	I2C_init();
 }
 
@@ -58,13 +56,6 @@ void vIMUInit()
  */
 void vIMURead()
 {
-	char address_payload_read, address_payload_write;
-	static int sent = 0;
-	//char query_payload;
-
-	address_payload_read = ((MPU_9250_ADDRESS_AD0_0 << 1) | 1);
-	address_payload_write = ((MPU_9250_ADDRESS_AD0_0 << 1));
-
 	vIMURegRead(MPU_9250_ACCEL_XOUT_H);
 	vIMURegRead(MPU_9250_ACCEL_XOUT_L);
 	vIMURegRead(MPU_9250_ACCEL_YOUT_H);
@@ -87,25 +78,24 @@ void vIMURead()
  * Sequence of operations using the I2C peripheral that performs a
  * single byte read sequence on the MPU-9250.
  */
-void vIMURegRead(char reg)
+uint8_t vIMURegRead(uint8_t reg)
 {
-	char address_payload_read, address_payload_write;
-
-	address_payload_read = ((MPU_9250_ADDRESS_AD0_0 << 1) | 1);
-	address_payload_write = ((MPU_9250_ADDRESS_AD0_0 << 1));
+	uint8_t register_value;
 
 	I2C_start();
 
-	I2C_write(address_payload_write);
+	I2C_write(MPU_9250_WRITE_OPERATION);
 	I2C_write(reg); // physical address register
 
 	I2C_start();
 
-	I2C_write(address_payload_read);
+	I2C_write(MPU_9250_READ_OPERATION);
 
-	I2C_read_nack();
+	register_value = I2C_read_nack();
 
 	I2C_stop();
+
+	return register_value;
 }
 
 

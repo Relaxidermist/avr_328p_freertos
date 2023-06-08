@@ -14,6 +14,11 @@
 #define MPU_9250_ADDRESS_AD0_1 0x69
 #define MPU_9250_ADDRESS_QUERY 0x25
 
+// Use the correct address here
+#define MPU_9250_ADDRESS 			MPU_9250_ADDRESS_AD0_0
+#define MPU_9250_READ_OPERATION 	MPU_9250_ADDRESS << 1 | 1
+#define MPU_9250_WRITE_OPERATION 	MPU_9250_ADDRESS << 1
+
 #define MPU_9250_ACCEL_XOUT_H 0x3B
 #define MPU_9250_ACCEL_XOUT_L 0x3C
 #define MPU_9250_ACCEL_YOUT_H 0x3D
@@ -34,7 +39,7 @@
 void vIMUInit();
 void vIMUTask(void *pvParms);
 void vIMURead();
-void vIMURegRead(char reg);
+uint8_t vIMURegRead(uint8_t reg);
 
 
 
