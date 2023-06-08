@@ -21,6 +21,16 @@
 #define MPU_9250_ACCEL_ZOUT_H 0x3F
 #define MPU_9250_ACCEL_ZOUT_L 0x40
 
+#define MPU_9250_TEMP_OUT_H 0x41
+#define MPU_9250_TEMP_OUT_L 0x42
+
+#define MPU_9250_GYRO_XOUT_H 0x43
+#define MPU_9250_GYRO_XOUT_L 0x44
+#define MPU_9250_GYRO_YOUT_H 0x45
+#define MPU_9250_GYRO_YOUT_L 0x46
+#define MPU_9250_GYRO_ZOUT_H 0x47
+#define MPU_9250_GYRO_ZOUT_L 0x48
+
 void vIMUInit();
 void vIMUTask(void *pvParms);
 void vIMURead();
