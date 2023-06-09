@@ -4,6 +4,7 @@
  *  Created on: Feb 4, 2015
  *      Author: jcobb
  */
+#include <stdint.h>
 #include <avr/io.h>
 #include "FreeRTOS.h"
 
@@ -28,8 +29,8 @@ portSHORT main(void)
 	vUSARTInit();
 
 	xTaskCreate(vLEDFlashTask, (int8_t*) "LED", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL);
-	xTaskCreate(vUltraSonicTask, (int8_t*) "SR04_1", configMINIMAL_STACK_SIZE, NULL, mainULTRASONIC_TASK_PRIORITY, NULL);
-	xTaskCreate(vUltraSonicTask, (int8_t*) "SR04_2", configMINIMAL_STACK_SIZE, NULL, mainULTRASONIC_TASK_PRIORITY, NULL);
+	//xTaskCreate(vUltraSonicTask, (int8_t*) "SR04_1", configMINIMAL_STACK_SIZE, NULL, mainULTRASONIC_TASK_PRIORITY, NULL);
+	//xTaskCreate(vUltraSonicTask, (int8_t*) "SR04_2", configMINIMAL_STACK_SIZE, NULL, mainULTRASONIC_TASK_PRIORITY, NULL);
 	xTaskCreate(vIMUTask, (int8_t*) "USART", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL);
 
 	vTaskStartScheduler();

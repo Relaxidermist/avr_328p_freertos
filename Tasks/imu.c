@@ -14,6 +14,28 @@
 #include <apptools.h>
 
 
+uint8_t imu_registers[] = {
+		MPU_9250_ACCEL_XOUT_H,
+		MPU_9250_ACCEL_XOUT_L,
+		MPU_9250_ACCEL_YOUT_H,
+		MPU_9250_ACCEL_YOUT_L,
+		MPU_9250_ACCEL_ZOUT_H,
+		MPU_9250_ACCEL_ZOUT_L,
+		MPU_9250_TEMP_OUT_H,
+		MPU_9250_TEMP_OUT_L,
+		MPU_9250_GYRO_XOUT_H,
+		MPU_9250_GYRO_XOUT_L,
+		MPU_9250_GYRO_YOUT_H,
+		MPU_9250_GYRO_YOUT_L,
+		MPU_9250_GYRO_ZOUT_H,
+		MPU_9250_GYRO_ZOUT_L
+};
+
+uint8_t imu_data[sizeof(imu_registers)];
+
+SemaphoreHandle_t xSemaphore = NULL;
+
+
 
 void vIMUTask(void *pvParms)
 {
@@ -21,7 +43,7 @@ void vIMUTask(void *pvParms)
 	const portTickType xFrequency = 500;
 	xLastWakeTime = xTaskGetTickCount();
 
-	SemaphoreHandle_t xSemaphore = xUSARTGetMutex();
+	xSemaphore = xUSARTGetMutex();
 
 	vIMUInit();
 
@@ -29,9 +51,11 @@ void vIMUTask(void *pvParms)
 
 		if(xSemaphoreTake(xSemaphore, 0) == pdTRUE)
 		{
-			vUSARTSetMessage("IMU!");
-			vUSARTPrint();
+			memset(imu_data, 0, sizeof(imu_data));
+
+			vUSARTSetMessage(imu_data);
 			vIMURead();
+			vUSARTPrint();
 			xSemaphoreGive(xSemaphore);
 		}
 
@@ -46,56 +70,48 @@ void vIMUTask(void *pvParms)
  */
 void vIMUInit()
 {
-	char address_payload_write;
-	address_payload_write = ((MPU_9250_ADDRESS_AD0_0 << 1));
-
 	I2C_init();
 }
 
 
 /*
- * TODO Read IMU Data into struct
+ * TODO join high/low bytes. remove hack for sending null char
  */
 void vIMURead()
 {
-	char address_payload_read, address_payload_write;
-	static int sent = 0;
-	//char query_payload;
-
-	address_payload_read = ((MPU_9250_ADDRESS_AD0_0 << 1) | 1);
-	address_payload_write = ((MPU_9250_ADDRESS_AD0_0 << 1));
-
-	vIMURegRead(MPU_9250_ACCEL_XOUT_L);
-	vIMURegRead(MPU_9250_ACCEL_XOUT_H);
-	vIMURegRead(MPU_9250_ACCEL_YOUT_L);
-	vIMURegRead(MPU_9250_ACCEL_YOUT_H);
-	vIMURegRead(MPU_9250_ACCEL_ZOUT_L);
-	vIMURegRead(MPU_9250_ACCEL_ZOUT_H);
+	for(uint8_t i = 0; i < sizeof(imu_registers) - 1; i++)
+	{
+		imu_data[i] = vIMURegRead(imu_registers[i]);
+		if(imu_data[i] == 0)
+		{
+			imu_data[i] = 1;
+		}
+	}
+	imu_data[sizeof(imu_data) - 1] = 0;
 }
 
 /*
  * Sequence of operations using the I2C peripheral that performs a
  * single byte read sequence on the MPU-9250.
  */
-void vIMURegRead(char reg)
+uint8_t vIMURegRead(uint8_t reg)
 {
-	char address_payload_read, address_payload_write;
-
-	address_payload_read = ((MPU_9250_ADDRESS_AD0_0 << 1) | 1);
-	address_payload_write = ((MPU_9250_ADDRESS_AD0_0 << 1));
+	uint8_t register_value;
 
 	I2C_start();
 
-	I2C_write(address_payload_write);
+	I2C_write(MPU_9250_WRITE_OPERATION);
 	I2C_write(reg); // physical address register
 
 	I2C_start();
 
-	I2C_write(address_payload_read);
+	I2C_write(MPU_9250_READ_OPERATION);
 
-	I2C_read_nack();
+	register_value = I2C_read_nack();
 
 	I2C_stop();
+
+	return register_value;
 }
 
 
