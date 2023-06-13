@@ -10,6 +10,9 @@
 
 #include "i2c.h"
 
+#define ROOM_TEMPERATURE_OFFSET 21.0		// Degrees C
+#define SENSITIVITY 			333.87 // LSB/Degrees C
+
 #define MPU_9250_ADDRESS_AD0_0 0x68
 #define MPU_9250_ADDRESS_AD0_1 0x69
 #define MPU_9250_ADDRESS_QUERY 0x25
@@ -36,9 +39,14 @@
 #define MPU_9250_GYRO_ZOUT_H 0x47
 #define MPU_9250_GYRO_ZOUT_L 0x48
 
+#define NUMBER_OF_DATA_ELEMENTS 7
+
 void vIMUInit();
 void vIMUTask(void *pvParms);
 void vIMURead();
+void vIMUJoinBytes(uint8_t * raw_data, uint16_t * processed_data);
+void vIMUPrint();
+void vUMUPrintTemperature();
 uint8_t vIMURegRead(uint8_t reg);
 
 

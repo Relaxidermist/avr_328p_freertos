@@ -5,6 +5,9 @@
  *      Author: ingram
  */
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "usart.h"
@@ -32,6 +35,9 @@ uint8_t imu_registers[] = {
 };
 
 uint8_t imu_data[sizeof(imu_registers)];
+uint16_t imu_joined_data[NUMBER_OF_DATA_ELEMENTS];
+
+char buffer[10];
 
 SemaphoreHandle_t xSemaphore = NULL;
 
@@ -53,9 +59,10 @@ void vIMUTask(void *pvParms)
 		{
 			memset(imu_data, 0, sizeof(imu_data));
 
-			vUSARTSetMessage(imu_data);
+			vUSARTSetMessage(buffer);
 			vIMURead();
-			vUSARTPrint();
+			vIMUPrintTemperature();
+
 			xSemaphoreGive(xSemaphore);
 		}
 
@@ -82,12 +89,9 @@ void vIMURead()
 	for(uint8_t i = 0; i < sizeof(imu_registers) - 1; i++)
 	{
 		imu_data[i] = vIMURegRead(imu_registers[i]);
-		if(imu_data[i] == 0)
-		{
-			imu_data[i] = 1;
-		}
+
 	}
-	imu_data[sizeof(imu_data) - 1] = 0;
+	vIMUJoinBytes(imu_data, imu_joined_data);
 }
 
 /*
@@ -113,5 +117,44 @@ uint8_t vIMURegRead(uint8_t reg)
 
 	return register_value;
 }
+
+
+void vIMUJoinBytes(uint8_t * raw_data, uint16_t * processed_data)
+{
+	for(uint8_t i = 0; i < NUMBER_OF_DATA_ELEMENTS; i++)
+	{
+		processed_data[i] = ((uint16_t)raw_data[2 * i] << 8) | raw_data[(2 * i) + 1];
+	}
+}
+
+/*
+ * Index through the bytes in an array and encode as ascii
+ */
+void vIMUPrint()
+{
+	for(uint8_t i = 0; i < NUMBER_OF_DATA_ELEMENTS; i++)
+	{
+		memset(buffer, 0, sizeof(buffer));
+		itoa(imu_joined_data[i], buffer, 10);
+		vUSARTPrint();
+	}
+}
+
+/*
+ * Print convert and print IMU temperature value
+ * TEMP_degC = ((TEMP_OUT – RoomTemp_Offset)/Temp_Sensitivity) + 21degC
+ */
+void vIMUPrintTemperature()
+{
+	uint8_t index = 3;
+	int16_t temperature = 0;
+	// perform temperature scaling here as per mpu-9250 manual
+	temperature = 100 * (((imu_joined_data[index] - ROOM_TEMPERATURE_OFFSET)/SENSITIVITY) + 21);
+
+	memset(buffer, 0, sizeof(buffer));
+	itoa(temperature, buffer, 10);
+	vUSARTPrint();
+}
+
 
 
