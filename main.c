@@ -4,6 +4,8 @@
  *  Created on: Feb 4, 2015
  *      Author: jcobb
  */
+
+#include <stdlib.h>
 #include <stdint.h>
 #include <avr/io.h>
 #include "FreeRTOS.h"
